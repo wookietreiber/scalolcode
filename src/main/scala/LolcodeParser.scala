@@ -32,13 +32,19 @@ class LolcodeParser extends JavaTokenParsers {
   override protected val whiteSpace = """[ \t\x0B\f]+""".r
 
   /** `HAI` followed by a variable amount of statements and ending with `KTHXBYE`. */
-  def lolcodeScript: Parser[Any] = hai~kthxbye
+  def lolcodeScript: Parser[Any] = hai ~ statements ~ kthxbye
 
   /** Beginning of a LOLCODE script, `HAI`. */
   def hai: Parser[Any] = "HAI"~statementSeparator
 
+  def statements: Parser[Any] = rep ( statement ~ statementSeparator )
+
+  def statement: Parser[Any] = byes
+
+  def byes: Parser[Any] = "BYES" ~ opt ( """\d+""".r ~ opt ( stringLiteral ) )
+
   /** End of a LOLCODE script, `KTHXBYE`, exiting with the default status code. */
-  def kthxbye: Parser[Any] = "KTHXBYE"
+  def kthxbye: Parser[Any] = "KTHXBYE" ~ ( statementSeparator | """\z""".r )
 
   /** Statements are separated by either a dot or a line separator.
     *

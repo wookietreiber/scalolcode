@@ -33,7 +33,7 @@ class ParserSpec extends Specification with ParserMatchers with ResultMatchers {
 
   "LOLCODE Parser Specification"                                              ^
                                                                              p^
-  "empty programs (just 'HAI' and 'KTHXBYE')"                                 ^
+  "empty scripts (just 'HAI' and 'KTHXBYE')"                                  ^
     "must be accepted when separated by ..."                                  ^
       "a single dot"          ! fromStr("HAI.KTHXBYE")                        ^
       "multiple dots"         ! fromStr("HAI...KTHXBYE")                      ^
@@ -46,6 +46,12 @@ class ParserSpec extends Specification with ParserMatchers with ResultMatchers {
     "must not be accepted when separated by ..."                              ^
       "a single space"        ! (fromStr("HAI KTHXBYE")  must beFailing)      ^
       "a single tab"          ! (fromStr("HAI\tKTHXBYE") must beFailing)      ^
+                                                                         endbr^
+  "statements"                                                                ^
+    "BYES"                                                                    ^
+      "simple"                ! fromRes("/byes.lol")                          ^
+      "status"                ! fromRes("/byes-status.lol")                   ^
+      "status and message"    ! fromRes("/byes-status-message.lol")           ^
                                                                             end
 
   // -----------------------------------------------------------------------
