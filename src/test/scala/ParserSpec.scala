@@ -33,7 +33,7 @@ class ParserSpec extends Specification with ParserMatchers with ResultMatchers {
 
   "LOLCODE Parser Specification"                                              ^
                                                                              p^
-  "Parsing empty programs (just 'HAI' and 'KTHXBYE')"                         ^
+  "empty programs (just 'HAI' and 'KTHXBYE')"                                 ^
     "must be accepted when separated by ..."                                  ^
       "a single dot"          ! fromStr("HAI.KTHXBYE")                        ^
       "multiple dots"         ! fromStr("HAI...KTHXBYE")                      ^
@@ -43,18 +43,17 @@ class ParserSpec extends Specification with ParserMatchers with ResultMatchers {
       "\\r"                   ! fromStr("HAI\rKTHXBYE")                       ^
       "\\r\\n"                ! fromStr("HAI\r\nKTHXBYE")                     ^
                                                                              p^
-    "should fail when separated by ..."                                       ^
+    "must not be accepted when separated by ..."                              ^
       "a single space"        ! (fromStr("HAI KTHXBYE")  must beFailing)      ^
       "a single tab"          ! (fromStr("HAI\tKTHXBYE") must beFailing)      ^
-                                                                             p^
                                                                             end
 
   // -----------------------------------------------------------------------
   // tests
   // -----------------------------------------------------------------------
 
-  def fromStr(src: String) = parseAll(lolcodeScript,       src ) must beASuccess
-  def fromRes(res: String) = parseAll(lolcodeScript, fetch(res)) must beASuccess
+  def fromStr(src: String) = string2script(      src ) must beASuccess
+  def fromRes(res: String) = string2script(fetch(res)) must beASuccess
 
   // -----------------------------------------------------------------------
   // utils
