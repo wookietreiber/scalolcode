@@ -1,0 +1,3 @@
+HAI
+  DIAF 0
+KTHXBYE

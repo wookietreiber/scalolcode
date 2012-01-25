@@ -42,21 +42,28 @@ class LolcodeParser extends JavaTokenParsers {
   def statements: Parser[Any] = rep ( statement ~ statementSeparator )
 
   /** End of a LOLCODE script, `"KTHXBYE"`, exiting with the default status code. */
-  def kthxbye: Parser[Any] = "KTHXBYE" ~ ( statementSeparator | """\z""".r )
+  def kthxbye: Parser[Any] = "KTHXBYE" ~ ( statementSeparator | eol )
 
   // -----------------------------------------------------------------------
   // statements
   // -----------------------------------------------------------------------
 
   /** May be any one of the implemented statements. */
-  def statement: Parser[Any] = byes
+  def statement: Parser[Any] = byes | diaf
 
   /** `"BYES"` exits the script at any point.
     *
     * It optionally takes an unsigned integer as status code and a string
     * literal which is printed to stdout.
     */
-  def byes: Parser[Any] = "BYES" ~ opt ( """\d+""".r ~ opt ( stringLiteral ) )
+  def byes: Parser[Any] = "BYES" ~ opt ( unsignedDecimalNumber ~ opt ( stringLiteral ) )
+
+  /** `"DIAF"` exits the script at any point with failure.
+    *
+    * It optionally takes an unsigned integer, which may not be `"0"`, as status
+    * code and a string literal which is printed to stderr.
+    */
+  def diaf: Parser[Any] = "DIAF" ~ opt ( unsignedDecimalNumberNotZero ~ opt ( stringLiteral ) )
 
   // -----------------------------------------------------------------------
   // utilities
@@ -64,6 +71,15 @@ class LolcodeParser extends JavaTokenParsers {
 
   /** Returns `"""[ \t\x0B\f]""".r`. */
   override protected val whiteSpace = """[ \t\x0B\f]+""".r
+
+  /** Returns `"""\d+""".r`. */
+  def unsignedDecimalNumber: Parser[String] = """\d+""".r
+
+  /** Returns `"""[123456789]\d*""".r`. */
+  def unsignedDecimalNumberNotZero: Parser[String] = """[123456789]\d*""".r
+
+  /** Returns `"""\z""".r`. */
+  def eol: Parser[String] = """\z""".r
 
   /** Statements are separated by either a dot or a line separator.
     *

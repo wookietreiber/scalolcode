@@ -52,6 +52,12 @@ class ParserSpec extends Specification with ParserMatchers with ResultMatchers {
       "simple"                ! fromRes("/byes.lol")                          ^
       "status"                ! fromRes("/byes-status.lol")                   ^
       "status and message"    ! fromRes("/byes-status-message.lol")           ^
+                                                                             p^
+    "DIAF"                                                                    ^
+      "simple"                ! fromRes("/diaf.lol")                          ^
+      "status"                ! fromRes("/diaf-status.lol")                   ^
+      "status zero"           ! (fromRes("/diaf-zero.lol") must beFailing)    ^
+      "status and message"    ! fromRes("/diaf-status-message.lol")           ^
                                                                             end
 
   // -----------------------------------------------------------------------
