@@ -22,33 +22,52 @@ import scala.util.parsing.combinator._
 
 /** Parses LOLCODE scripts.
   *
-  * LOLCODE scripts begin with `HAI`, end with `KTHXBYE` and can include a
-  * variable amount of statements. Statements are separated by either a dot,
-  * `.`, or a line separator, `\n`, `\r` or `\r\n`.
+  * LOLCODE scripts begin with `"HAI"`, end with `"KTHXBYE"` and can include a
+  * variable amount of statements. Statements are separated by either a dot
+  * (`"."`) or a line separator (`"\n"`, `"\r"` or `"\r\n"`).
   */
 class LolcodeParser extends JavaTokenParsers {
+
+  /** `"HAI"` followed by a variable amount of statements and ending with `"KTHXBYE"`. */
+  def lolcodeScript: Parser[Any] = hai ~ statements ~ kthxbye
+
+  // -----------------------------------------------------------------------
+  // essentials
+  // -----------------------------------------------------------------------
+
+  /** Beginning of a LOLCODE script, `"HAI"`. */
+  def hai: Parser[Any] = "HAI" ~ statementSeparator
+
+  /** A variable amount of statements, separated by one or more statement separators. */
+  def statements: Parser[Any] = rep ( statement ~ statementSeparator )
+
+  /** End of a LOLCODE script, `"KTHXBYE"`, exiting with the default status code. */
+  def kthxbye: Parser[Any] = "KTHXBYE" ~ ( statementSeparator | """\z""".r )
+
+  // -----------------------------------------------------------------------
+  // statements
+  // -----------------------------------------------------------------------
+
+  /** May be any one of the implemented statements. */
+  def statement: Parser[Any] = byes
+
+  /** `"BYES"` exits the script at any point.
+    *
+    * It optionally takes an unsigned integer as status code and a string
+    * literal which is printed to stdout.
+    */
+  def byes: Parser[Any] = "BYES" ~ opt ( """\d+""".r ~ opt ( stringLiteral ) )
+
+  // -----------------------------------------------------------------------
+  // utilities
+  // -----------------------------------------------------------------------
 
   /** Returns `"""[ \t\x0B\f]""".r`. */
   override protected val whiteSpace = """[ \t\x0B\f]+""".r
 
-  /** `HAI` followed by a variable amount of statements and ending with `KTHXBYE`. */
-  def lolcodeScript: Parser[Any] = hai ~ statements ~ kthxbye
-
-  /** Beginning of a LOLCODE script, `HAI`. */
-  def hai: Parser[Any] = "HAI"~statementSeparator
-
-  def statements: Parser[Any] = rep ( statement ~ statementSeparator )
-
-  def statement: Parser[Any] = byes
-
-  def byes: Parser[Any] = "BYES" ~ opt ( """\d+""".r ~ opt ( stringLiteral ) )
-
-  /** End of a LOLCODE script, `KTHXBYE`, exiting with the default status code. */
-  def kthxbye: Parser[Any] = "KTHXBYE" ~ ( statementSeparator | """\z""".r )
-
   /** Statements are separated by either a dot or a line separator.
     *
-    * Valid line separators are `\n`, `\r` and `\r\n`.
+    * Valid line separators are `"\n"`, `"\r"` and `"\r\n"`.
     */
   def statementSeparator: Parser[Any] = """[.\r\n]+[.\s]*""".r
 
