@@ -16,5 +16,24 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 
+/** Have fun.
+  *
+  * {{{
+  * import lolcode._
+  *
+  * try { sys.error("foobar") } catch Y U MAD
+  * }}}
+  */
 package object scalolcode {
+
+  type ErrorHandler = PartialFunction[Throwable,Unit]
+
+  val MAD: ErrorHandler = {
+    case e: Exception => println(e.toString)
+  }
+
+  object Y {
+    def U(eh: ErrorHandler) = eh
+  }
+
 }

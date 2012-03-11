@@ -16,7 +16,7 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 
-package scalolcode
+package lolcode
 
 import org.specs2._
 import org.specs2.matcher._

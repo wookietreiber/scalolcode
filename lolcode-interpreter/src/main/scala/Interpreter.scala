@@ -16,50 +16,14 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 
-import sbt._
-import Keys._
+package lolcode
 
-import Dependencies._
-import BuildSettings._
+object Interpreter extends LolcodeParser with App {
 
-object BuildSettings {
-  val buildOrganization = "com.github.scalolcode"
-  val buildVersion      = "0.1-SNAPSHOT"
-  val buildScalaVersion = "2.9.1"
+  for (file <- args) file2script(file)
 
-  val buildSettings = Defaults.defaultSettings ++ Seq (
-    organization         := buildOrganization,
-    version              := buildVersion,
-    scalaVersion         := buildScalaVersion,
-    libraryDependencies ++= Seq ( specs2 )
-  )
-}
+  def file2script(file: String) = string2script(io.Source.fromFile(file).mkString)
 
-object ScalolcodeBuild extends Build {
+  def string2script(src: String) = parseAll(lolcodeScript, src)
 
-  lazy val root = Project (
-    id   = "scalolcode",
-    base = file(".")
-  ) aggregate (pimps, interpreter)
-
-  lazy val pimps = Project (
-    id       = "scalolcode-scala-pimps",
-    base     = file("scala-pimps"),
-    settings = buildSettings ++ Seq (
-      initialCommands in Compile in console := "import scalolcode._"
-    )
-  )
-
-  lazy val interpreter = Project (
-    id       = "lolcode-interpreter",
-    base     = file("lolcode-interpreter"),
-    settings = buildSettings ++ Seq (
-      initialCommands in Compile in console := "import lolcode._"
-    )
-  )
-
-}
-
-object Dependencies {
-  lazy val specs2 = "org.specs2" %% "specs2" % "1.8.2" % "test"
 }

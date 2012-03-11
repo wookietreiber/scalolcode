@@ -16,14 +16,5 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 
-package scalolcode
-
-object Interpreter extends LolcodeParser with App {
-
-  for (file <- args) file2script(file)
-
-  def file2script(file: String) = string2script(io.Source.fromFile(file).mkString)
-
-  def string2script(src: String) = parseAll(lolcodeScript, src)
-
+package object lolcode {
 }
