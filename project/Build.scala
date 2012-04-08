@@ -19,18 +19,24 @@
 import sbt._
 import Keys._
 
+import Resolvers._
 import Dependencies._
 import BuildSettings._
 
 object BuildSettings {
-  val buildOrganization = "com.github.scalolcode"
-  val buildVersion      = "0.1-SNAPSHOT"
-  val buildScalaVersion = "2.9.1"
+  lazy val buildOrganization = "com.github.scalolcode"
+  lazy val buildVersion      = "0.1.0-SNAPSHOT"
+  lazy val buildScalaVersion = "2.9.2-RC2"
 
-  val buildSettings = Defaults.defaultSettings ++ Seq (
+  lazy val baseSettings = Defaults.defaultSettings ++ Seq (
+    crossScalaVersions := Seq ( "2.9.1", "2.9.1-1", "2.9.2-RC2" )
+  )
+
+  lazy val buildSettings = baseSettings ++ Seq (
     organization         := buildOrganization,
     version              := buildVersion,
     scalaVersion         := buildScalaVersion,
+    resolvers           ++= Seq ( sonatype ),
     libraryDependencies ++= Seq ( specs2 )
   )
 }
@@ -38,15 +44,18 @@ object BuildSettings {
 object ScalolcodeBuild extends Build {
 
   lazy val root = Project (
-    id   = "scalolcode",
-    base = file(".")
+    id        = "scalolcode",
+    base      = file("."),
+    settings  = baseSettings
   ) aggregate (pimps, interpreter)
 
   lazy val pimps = Project (
     id       = "scalolcode-scala-pimps",
     base     = file("scala-pimps"),
     settings = buildSettings ++ Seq (
-      initialCommands in Compile in console := "import scalolcode._"
+      initialCommands in Compile in console += """
+        import scalolcode._
+      """
     )
   )
 
@@ -54,12 +63,18 @@ object ScalolcodeBuild extends Build {
     id       = "lolcode-interpreter",
     base     = file("lolcode-interpreter"),
     settings = buildSettings ++ Seq (
-      initialCommands in Compile in console := "import lolcode._"
+      initialCommands in Compile in console += """
+        import lolcode._
+      """
     )
   )
 
 }
 
 object Dependencies {
-  lazy val specs2 = "org.specs2" %% "specs2" % "1.8.2" % "test"
+  lazy val specs2 = "org.specs2" %% "specs2" % "1.9" % "test"
+}
+
+object Resolvers {
+  lazy val sonatype = "releases" at "http://oss.sonatype.org/content/repositories/releases"
 }
