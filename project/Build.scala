@@ -26,10 +26,10 @@ import BuildSettings._
 object BuildSettings {
   lazy val buildOrganization = "com.github.scalolcode"
   lazy val buildVersion      = "0.1.0-SNAPSHOT"
-  lazy val buildScalaVersion = "2.9.2-RC2"
+  lazy val buildScalaVersion = "2.9.2"
 
   lazy val baseSettings = Defaults.defaultSettings ++ Seq (
-    crossScalaVersions := Seq ( "2.9.1", "2.9.1-1", "2.9.2-RC2" )
+    crossScalaVersions := Seq ( "2.9.1", "2.9.1-1", "2.9.2" )
   )
 
   lazy val buildSettings = baseSettings ++ Seq (
@@ -46,8 +46,9 @@ object ScalolcodeBuild extends Build {
   lazy val root = Project (
     id        = "scalolcode",
     base      = file("."),
+    aggregate = Seq ( pimps, interpreter ),
     settings  = baseSettings
-  ) aggregate (pimps, interpreter)
+  )
 
   lazy val pimps = Project (
     id       = "scalolcode-scala-pimps",
