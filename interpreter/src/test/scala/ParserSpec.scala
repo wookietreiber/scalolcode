@@ -1,19 +1,18 @@
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
- *                                                                           *
- *  This file is part of the project 'scalolcode'.                           *
- *                                                                           *
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
- *                                                                           *
- *  This project is free software. It comes without any warranty, to the     *
- *  extent permitted by applicable law. You can redistribute it and/or       *
- *  modify it under the terms of the Do What The Fuck You Want To Public     *
- *  License, Version 2, as published by Sam Hocevar.                         *
- *                                                                           *
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
- *                                                                           *
- *  See http://sam.zoy.org/wtfpl/COPYING for more details.                   *
- *                                                                           *
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ *                                                                                               *
+ *  This file is part of the project 'scalolcode'.                                               *
+ *                                                                                               *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ *                                                                                               *
+ *  This project is free software. It comes without any warranty, to the extent permitted by     *
+ *  applicable law. You can redistribute it and/or modify it under the terms of the Do What The  *
+ *  Fuck You Want To Public License, Version 2, as published by Sam Hocevar.                     *
+ *                                                                                               *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ *                                                                                               *
+ *  See http://sam.zoy.org/wtfpl/COPYING for more details.                                       *
+ *                                                                                               *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 
 package lolcode
@@ -27,49 +26,48 @@ import Interpreter._
 
 class ParserSpec extends Specification with ParserMatchers with ResultMatchers { def is =
 
-  // -----------------------------------------------------------------------
+  // -----------------------------------------------------------------------------------------------
   // fragments
-  // -----------------------------------------------------------------------
+  // -----------------------------------------------------------------------------------------------
 
-  "LOLCODE Parser Specification"                                              ^
-                                                                             p^
-  "empty scripts (just 'HAI' and 'KTHXBYE')"                                  ^
-    "must be accepted when separated by ..."                                  ^
-      "a single dot"          ! fromStr("HAI.KTHXBYE")                        ^
-      "multiple dots"         ! fromStr("HAI...KTHXBYE")                      ^
-                                                                             p^
-    "must be accepted when separated by the line separator ..."               ^
-      "\\n"                   ! fromStr("HAI\nKTHXBYE")                       ^
-      "\\r"                   ! fromStr("HAI\rKTHXBYE")                       ^
-      "\\r\\n"                ! fromStr("HAI\r\nKTHXBYE")                     ^
-                                                                             p^
-    "must not be accepted when separated by ..."                              ^
-      "a single space"        ! (fromStr("HAI KTHXBYE")  must beFailing)      ^
-      "a single tab"          ! (fromStr("HAI\tKTHXBYE") must beFailing)      ^
-                                                                         endbr^
-  "statements"                                                                ^
-    "BYES"                                                                    ^
-      "simple"                ! fromRes("/byes.lol")                          ^
-      "status"                ! fromRes("/byes-status.lol")                   ^
-      "status and message"    ! fromRes("/byes-status-message.lol")           ^
-                                                                             p^
-    "DIAF"                                                                    ^
-      "simple"                ! fromRes("/diaf.lol")                          ^
-      "status"                ! fromRes("/diaf-status.lol")                   ^
-      "status zero"           ! (fromRes("/diaf-zero.lol") must beFailing)    ^
-      "status and message"    ! fromRes("/diaf-status-message.lol")           ^
-                                                                            end
-
-  // -----------------------------------------------------------------------
+  "LOLCODE Parser Specification"                                                                   ^
+                                                                                                  p^
+  "empty scripts (just 'HAI' and 'KTHXBYE')"                                                       ^
+    "must be accepted when separated by ..."                                                       ^
+      "a single dot"          ! fromStr("HAI.KTHXBYE")                                             ^
+      "multiple dots"         ! fromStr("HAI...KTHXBYE")                                           ^
+                                                                                                  p^
+    "must be accepted when separated by the line separator ..."                                    ^
+      "\\n"                   ! fromStr("HAI\nKTHXBYE")                                            ^
+      "\\r"                   ! fromStr("HAI\rKTHXBYE")                                            ^
+      "\\r\\n"                ! fromStr("HAI\r\nKTHXBYE")                                          ^
+                                                                                                  p^
+    "must not be accepted when separated by ..."                                                   ^
+      "a single space"        ! (fromStr("HAI KTHXBYE")  must beFailing)                           ^
+      "a single tab"          ! (fromStr("HAI\tKTHXBYE") must beFailing)                           ^
+                                                                                              endbr^
+  "statements"                                                                                     ^
+    "BYES"                                                                                         ^
+      "simple"                ! fromRes("/byes.lol")                                               ^
+      "status"                ! fromRes("/byes-status.lol")                                        ^
+      "status and message"    ! fromRes("/byes-status-message.lol")                                ^
+                                                                                                  p^
+    "DIAF"                                                                                         ^
+      "simple"                ! fromRes("/diaf.lol")                                               ^
+      "status"                ! fromRes("/diaf-status.lol")                                        ^
+      "status zero"           ! (fromRes("/diaf-zero.lol") must beFailing)                         ^
+      "status and message"    ! fromRes("/diaf-status-message.lol")                                ^
+                                                                                                 end
+  // -----------------------------------------------------------------------------------------------
   // tests
-  // -----------------------------------------------------------------------
+  // -----------------------------------------------------------------------------------------------
 
   def fromStr(src: String) = string2script(      src ) must beASuccess
   def fromRes(res: String) = string2script(fetch(res)) must beASuccess
 
-  // -----------------------------------------------------------------------
+  // -----------------------------------------------------------------------------------------------
   // utils
-  // -----------------------------------------------------------------------
+  // -----------------------------------------------------------------------------------------------
 
   val parsers = Interpreter
 
