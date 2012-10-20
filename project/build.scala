@@ -21,9 +21,9 @@ import Keys._
 object ScalolcodeBuild extends Build {
 
   lazy val baseSettings = Defaults.defaultSettings ++ Seq (
-    organization         := "com.github.scalolcode",
-    version              := "0.1.0-SNAPSHOT",
-    scalaVersion         := "2.10.0-M7"
+    organization       := "com.github.scalolcode",
+    version            := "0.1.0-SNAPSHOT",
+    scalaVersion       := "2.10.0-RC1"
   )
 
   lazy val root = Project (
@@ -50,7 +50,7 @@ object ScalolcodeBuild extends Build {
     settings = baseSettings ++ Seq (
       name := "lolcode-interpreter",
       libraryDependencies ++= Seq (
-        "org.specs2" % "specs2_2.10.0-M7" % "1.12.1.1" % "test"
+        "org.specs2" %% "specs2" % "1.12.2" % "test" cross CrossVersion.full
       ),
       initialCommands in Compile in console += """
         import lolcode._
